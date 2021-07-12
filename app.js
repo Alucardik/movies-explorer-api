@@ -1,24 +1,29 @@
 const express = require('express');
 require('dotenv').config();
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-// const corsHandler = require('./middlewares/cors');
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200,
+};
+
 // const NotFoundError = require('./middlewares/error_handling/notFoundError');
 // const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { moviesRouter } = require('./routes/movies');
 const { usersRouter } = require('./routes/users');
-// const auth = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 
-// const { createUser, login } = require('./controllers/users');
+const { createUser, login } = require('./controllers/user');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-// app.use(corsHandler);
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,11 +31,11 @@ app.use(cookieParser());
 
 // app.use(requestLogger);
 
-// app.post('/signin', login);
-//
-// app.post('/signup', createUser);
+app.post('/signin', login);
 
-// app.use(auth);
+app.post('/signup', createUser);
+
+app.use(auth);
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
 
@@ -38,8 +43,8 @@ app.delete('/signout', (req, res) => {
   res.clearCookie('jwt', {
     httpOnly: true,
     path: '/',
-    sameSite: 'None',
-    secure: true,
+    // sameSite: 'None',
+    // secure: true,
   }).end();
 });
 
