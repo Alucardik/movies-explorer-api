@@ -70,7 +70,7 @@ app.use((req, res, next) => {
   next(new Error('Invalid endpoint/method'));
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/movie-explorer-db', {
   useCreateIndex: true,
   useFindAndModify: false,
   useNewUrlParser: true,
