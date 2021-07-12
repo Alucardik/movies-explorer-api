@@ -8,8 +8,8 @@ const { errors } = require('celebrate');
 // const corsHandler = require('./middlewares/cors');
 // const NotFoundError = require('./middlewares/error_handling/notFoundError');
 // const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const { cardsRouter } = require('./routes/cards');
-// const { usersRouter } = require('./routes/users');
+const { moviesRouter } = require('./routes/movies');
+const { usersRouter } = require('./routes/users');
 // const auth = require('./middlewares/auth');
 
 // const { createUser, login } = require('./controllers/users');
@@ -26,29 +26,13 @@ app.use(cookieParser());
 
 // app.use(requestLogger);
 
-// logging in
-// app.post('/signin', celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//   }),
-// }), login);
-
-// creating new user
-// app.post('/signup', celebrate({
-//   body: Joi.object().keys({
-//     about: Joi.string().min(2).max(30),
-//     avatar: Joi.string()
-//       .pattern(/^https?:\/\/(www\.)?[\w-]+\.[\w.]+\/?[\w\-.~:/?#[\]@!$&'()*+,;=]+/),
-//     name: Joi.string().min(2).max(30),
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//   }),
-// }), createUser);
+// app.post('/signin', login);
+//
+// app.post('/signup', createUser);
 
 // app.use(auth);
-// app.use('/users', usersRouter);
-// app.use('/cards', cardsRouter);
+app.use('/users', usersRouter);
+app.use('/movies', moviesRouter);
 
 app.delete('/signout', (req, res) => {
   res.clearCookie('jwt', {
