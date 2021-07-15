@@ -11,7 +11,6 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// const NotFoundError = require('./middlewares/error_handling/notFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { moviesRouter } = require('./routes/movies');
 const { usersRouter } = require('./routes/users');
