@@ -41,7 +41,13 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  const { JWT_SECRET = 'yet-another-secret-code' } = process.env;
+  let JWT_SECRET;
+  const { NODE_ENV } = process.env;
+  if (NODE_ENV !== 'production') {
+    JWT_SECRET = 'yet-another-secret-code';
+  } else {
+    JWT_SECRET = process.env.JWT_SECRET;
+  }
 
   return user.findUserByCredentials(email, password)
     .then((newUser) => {
