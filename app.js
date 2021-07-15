@@ -12,7 +12,7 @@ const corsOptions = {
 };
 
 // const NotFoundError = require('./middlewares/error_handling/notFoundError');
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { moviesRouter } = require('./routes/movies');
 const { usersRouter } = require('./routes/users');
 const auth = require('./middlewares/auth');
@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use(requestLogger);
+app.use(requestLogger);
 
 app.post('/signin', login);
 
@@ -48,16 +48,15 @@ app.delete('/signout', (req, res) => {
   }).end();
 });
 
-// app.use(errorLogger);
-
 // Joi error handling middleware
 app.use(errors());
 
 // handle invalid routes
 app.use((req, res, next) => {
-  // next(new NotFoundError('Invalid endpoint/method'));
   next(new Error('Invalid endpoint/method'));
 });
+
+app.use(errorLogger);
 
 mongoose.connect('mongodb://localhost:27017/movie-explorer-db', {
   useCreateIndex: true,
@@ -67,11 +66,9 @@ mongoose.connect('mongodb://localhost:27017/movie-explorer-db', {
 });
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const { statusCode = 500, message = false } = err;
   res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка'
-      : message,
+    message: message || 'На сервере произошла ошибка',
   });
   next();
 });
