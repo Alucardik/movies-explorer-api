@@ -3,13 +3,12 @@ const movie = require('../models/movie');
 const NotFoundError = require('../middlewares/error_handling/notFoundError');
 const ForbiddenError = require('../middlewares/error_handling/forbiddenError');
 const BadRequestError = require('../middlewares/error_handling/badRequestError');
-const IntervalServerError = require('../middlewares/error_handling/intervalServerError');
 
 module.exports.getMovies = (req, res, next) => {
   movie.find({})
     .then((movies) => res.send(movies))
     .catch(() => {
-      throw new IntervalServerError('Ошибка извлечения фильмов');
+      throw new Error('Ошибка извлечения фильмов');
     })
     .catch(next);
 };
@@ -49,7 +48,7 @@ module.exports.createMovie = (req, res, next) => {
         case 'ValidationError':
           throw new BadRequestError(message);
         default:
-          throw new IntervalServerError(message);
+          throw new Error(message);
       }
     })
     .catch(next);
@@ -59,15 +58,15 @@ module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   const { _id } = req.user;
 
-  movie.findById(movieId)
+  movie.findOne({ movieId })
     .then((reqFilm) => {
       if (reqFilm) {
         if (reqFilm.owner.equals(_id)) {
-          return movie.findByIdAndRemove(movieId);
+          return reqFilm.remove();
         }
-        return Promise.reject(new ForbiddenError('Запрошено удаление не принадлежащей вам карточки'));
+        return Promise.reject(new ForbiddenError('Запрошено удаление не принадлежащего вам фильма'));
       }
-      return Promise.reject(new NotFoundError('Запрашиваемая карточка не найдена'));
+      return Promise.reject(new NotFoundError('Запрашиваемый фильм не найден'));
     })
     .then((reqFilm) => {
       res.send({ reqFilm });
@@ -76,12 +75,8 @@ module.exports.deleteMovie = (req, res, next) => {
       switch (err.name) {
         case 'CastError':
           throw new BadRequestError('Некорректный id фильма');
-        case 'NotFound':
-          throw err;
-        case 'Forbidden':
-          throw err;
         default:
-          throw new IntervalServerError(err.message);
+          throw err;
       }
     })
     .catch(next);

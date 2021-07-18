@@ -10,6 +10,7 @@ indexRouter.use('/', authRouter);
 indexRouter.use(auth);
 
 indexRouter.use('/users', usersRouter);
+
 indexRouter.use('/movies', moviesRouter);
 
 indexRouter.delete('/signout', (req, res) => {

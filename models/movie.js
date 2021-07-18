@@ -30,7 +30,7 @@ const movieSchema = mongoose.Schema({
         return isURL(url);
       },
     },
-    message: 'Пожалуйста, введите действительный URL',
+    message: 'Пожалуйста, введите действительный URL изображения',
   },
   trailer: {
     required: true,
@@ -40,7 +40,7 @@ const movieSchema = mongoose.Schema({
         return isURL(url);
       },
     },
-    message: 'Пожалуйста, введите действительный URL',
+    message: 'Пожалуйста, введите действительный URL трейлера',
   },
   thumbnail: {
     required: true,
@@ -50,7 +50,7 @@ const movieSchema = mongoose.Schema({
         return isURL(url);
       },
     },
-    message: 'Пожалуйста, введите действительный URL',
+    message: 'Пожалуйста, введите действительный URL превью',
   },
   owner: {
     required: true,

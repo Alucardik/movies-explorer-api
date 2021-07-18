@@ -5,7 +5,6 @@ const user = require('../models/user');
 
 const NotFoundError = require('../middlewares/error_handling/notFoundError');
 const BadRequestError = require('../middlewares/error_handling/badRequestError');
-const IntervalServerError = require('../middlewares/error_handling/intervalServerError');
 const DuplicateMailError = require('../middlewares/error_handling/duplicateMailError');
 const NotAuthorizedError = require('../middlewares/error_handling/notAuthorizedError');
 
@@ -29,11 +28,11 @@ module.exports.createUser = (req, res, next) => {
           throw new BadRequestError(message);
         case 'MongoError':
           if (code === 11000) {
-            throw new DuplicateMailError(message);
+            throw new DuplicateMailError('Пользователь с таким email уже зарегистрирован');
           }
-          break;
+          throw new Error('Ошибка базы данных');
         default:
-          throw new IntervalServerError(message);
+          throw new Error(message);
       }
     })
     .catch(next);
@@ -81,10 +80,8 @@ module.exports.getCurUser = (req, res, next) => {
       switch (err.name) {
         case 'CastError':
           throw new BadRequestError('Некорректный id пользователя');
-        case 'NotFound':
-          throw err;
         default:
-          throw new IntervalServerError(err.message);
+          throw err;
       }
     })
     .catch(next);
@@ -109,10 +106,8 @@ module.exports.updateCurUser = (req, res, next) => {
           throw new BadRequestError(err.message);
         case 'CastError':
           throw new BadRequestError('Некорректный id пользователя');
-        case 'NotFound':
-          throw err;
         default:
-          throw new IntervalServerError(err.message);
+          throw err;
       }
     })
     .catch(next);
