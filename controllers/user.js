@@ -72,7 +72,7 @@ module.exports.getCurUser = (req, res, next) => {
   user.findById(req.user._id)
     .then((reqUser) => {
       if (reqUser) {
-        return res.send({ name: reqUser.name, email: reqUser.email, _id: req.user._id });
+        return res.send({ name: reqUser.name, email: reqUser.email });
       }
       return Promise.reject(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
