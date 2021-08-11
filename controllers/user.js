@@ -57,8 +57,8 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 3,
         httpOnly: true,
         path: '/',
-        // sameSite: 'None',
-        // secure: true,
+        sameSite: 'None',
+        secure: true,
       })
         .end();
     })
