@@ -17,8 +17,8 @@ indexRouter.delete('/signout', (req, res) => {
   res.clearCookie('jwt', {
     httpOnly: true,
     path: '/',
-    // sameSite: 'None',
-    // secure: true,
+    sameSite: 'None',
+    secure: true,
   }).end();
 });
 
