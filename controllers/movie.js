@@ -5,7 +5,7 @@ const ForbiddenError = require('../middlewares/error_handling/forbiddenError');
 const BadRequestError = require('../middlewares/error_handling/badRequestError');
 
 module.exports.getMovies = (req, res, next) => {
-  movie.find({})
+  movie.find({owner: req.user._id})
     .then((movies) => res.send(movies))
     .catch(() => {
       throw new Error('Ошибка извлечения фильмов');
