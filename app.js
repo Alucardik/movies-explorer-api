@@ -6,8 +6,20 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
+const allowedHosts = [
+  "http://localhost:3000",
+  "http://alucardik.diploma.nomoredomains.club",
+  "https://alucardik.diploma.nomoredomains.club",
+  ];
+
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (allowedHosts.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
