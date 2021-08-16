@@ -63,7 +63,6 @@ module.exports.deleteMovie = (req, res, next) => {
       if (reqFilm) {
           return reqFilm.remove();
         }
-      }
       return Promise.reject(new NotFoundError('Запрашиваемый фильм не найден'));
     })
     .then((reqFilm) => {
