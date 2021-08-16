@@ -58,13 +58,11 @@ module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   const { _id } = req.user;
 
-  movie.findOne({ movieId })
+  movie.findOne({ movieId, owner: _id })
     .then((reqFilm) => {
       if (reqFilm) {
-        if (reqFilm.owner.equals(_id)) {
           return reqFilm.remove();
         }
-        return Promise.reject(new ForbiddenError('Запрошено удаление не принадлежащего вам фильма'));
       }
       return Promise.reject(new NotFoundError('Запрашиваемый фильм не найден'));
     })
